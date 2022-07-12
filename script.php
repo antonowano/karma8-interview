@@ -28,7 +28,7 @@ $stmRead = $pdo->prepare('
 $stmRead->execute();
 $rows = $stmRead->fetch(PDO::FETCH_ASSOC);
 
-$stmUpdateEmailState = $pdo->prepare('UPDATE emails SET checked = 1, valid = :state WHERE email = :email');
+$stmUpdateEmailState = $pdo->prepare('UPDATE emails SET checked = 1, valid = :valid WHERE email = :email');
 
 foreach ($rows as $row) {
     // Т.к. из бд выбираем только валидные и непроверенные
@@ -38,8 +38,8 @@ foreach ($rows as $row) {
     if ($row['checked'] == false) {
         $validEmail = check_email($row['email']);
         $stmUpdateEmailState->execute([
-            'valid' => $validEmail,
-            'email' => $row['email'],
+            ':valid' => $validEmail,
+            ':email' => $row['email'],
         ]);
     }
 
